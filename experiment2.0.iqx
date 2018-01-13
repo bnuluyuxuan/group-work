@@ -1,0 +1,176 @@
+﻿// 实验的程序
+<values>
+	/fixationtime = 0
+</values>
+
+<expressions>
+	/generaterandom = ceil(rand(400,600))
+</expressions>
+
+
+<item instruction>
+	/1 = "接下来进入学习阶段，屏幕上将会出现词语对，你需要记住他们。"
+	/2 = "接下来会播放一段视频。"
+	/3 = "请填写我们的问卷，测试你是否记得学过的词语对。"
+</item>
+
+<item key>
+	/1 = "如果对指导语没有疑问,请按任意键开始实验"
+</item>
+
+//这里需要用正式的实验材料替换它们
+<item wordlist>
+/1="幻灯片1.bmp"
+/2="幻灯片2.bmp"
+/3="幻灯片3.bmp"
+/4="幻灯片4.bmp"
+/5="幻灯片5.bmp"
+/6="幻灯片6.bmp"
+/7="幻灯片7.bmp"
+/8="幻灯片8.bmp"
+/9="幻灯片9.bmp"
+/10="幻灯片10.bmp"
+/11="幻灯片11.bmp"
+/12="幻灯片12.bmp"
+/13="幻灯片13.bmp"
+/14="幻灯片14.bmp"
+/15="幻灯片15.bmp"
+/16="幻灯片16.bmp"
+/17="幻灯片17.bmp"
+/18="幻灯片18.bmp"
+/19="幻灯片19.bmp"
+/20="幻灯片20.bmp"
+/21="幻灯片21.bmp"
+/22="幻灯片22.bmp"
+/23="幻灯片23.bmp"
+/24="幻灯片24.bmp"
+/25="幻灯片25.bmp"
+/26="幻灯片26.bmp"
+/27="幻灯片27.bmp"
+/28="幻灯片28.bmp"
+/29="幻灯片29.bmp"
+/30="幻灯片30.bmp"
+</item>
+
+<item fixation>
+	/1 = "注视点.bmp"
+</item>
+
+<item source>
+	/1 = "爱剪辑-小猪佩奇.avi"
+</item>
+
+==================================================================================================================================
+<text instructiontext1>
+	/items = instruction
+	/select = 1
+	/fontstyle = ("楷体", 2.76%, true, false, false, false, 5, 1)
+	/txbgcolor = (255,255,255)
+	/txcolor = (0,0,0)
+	/vposition = 30 pct
+	/hjustify = left
+</text>
+
+<text instructiontext2>
+	/items = instruction
+	/select = 2
+	/fontstyle = ("楷体", 2.76%, true, false, false, false, 5, 1)
+	/txbgcolor = (255,255,255)
+	/txcolor = (0,0,0)
+	/vposition = 30 pct
+	/hjustify = left
+</text>
+
+<text instructiontext3>
+	/items = instruction
+	/select = 3
+	/fontstyle = ("楷体", 2.76%, true, false, false, false, 5, 1)
+	/txbgcolor = (255,255,255)
+	/vposition = 30 pct
+	/txcolor = (0,0,0)
+	/hjustify = left
+</text>
+
+<text anykeytxt>
+	/items = key
+	/vposition = 70 pct
+	/fontstyle = ("楷体", 2.76%, true, false, false, false, 5, 1)
+	/txcolor = (0, 0, 0)
+	/txbgcolor = (255,255,255)
+</text>
+
+<picture wordtext>
+	/items = wordlist	/erase = True(118,113,113)
+</picture>
+
+<picture fixation>
+	/items = fixation
+	/erase = True(118,113,113)
+</picture>
+
+//这里放入做好的视频的文件名。
+<video video>
+	/ items = source
+</video>
+
+================================================================================================================================
+<trial instructiontrial1>
+	/validresponse = (anyresponse)
+	/stimulustimes = [1=instructiontext1, anykeytxt]
+	/recorddata = false
+</trial>
+
+<trial instructiontrial2>
+	/validresponse = (anyresponse)
+	/stimulustimes = [1=instructiontext2, anykeytxt]
+	/recorddata = false
+</trial>
+
+<trial endinstructiontrial>
+	/validresponse = (anyresponse)
+	/stimulustimes = [1=instructiontext3, anykeytxt]
+	/recorddata = false
+</trial>
+
+<trial videotrial>
+	/stimulustimes = [1=video]
+	/timeout = 317000
+</trial>
+
+<trial wordtrial>
+	/pretrialpause = 1500
+	/ontrialbegin = [values.fixationtime = expressions.generaterandom]
+    /ontrialbegin = [trial.wordtrial.insertstimulustime(picture.fixation, 0)]
+    /ontrialbegin = [trial.wordtrial.insertstimulustime(picture.wordtext,values.fixationtime)]
+    /ontrialend = [trial.wordtrial.clearstimulusframes()]
+	/timeout = values.fixationtime+500
+</trial>
+=================================================================================================================================
+<block instruction1>
+	/screencolor = (255,255,255)
+	/trials = [1 = instructiontrial1]
+</block>
+
+<block instruction2>
+	/screencolor = (255,255,255)
+	/trials = [1 = instructiontrial2]
+</block>
+
+<block endinstruction>
+	/screencolor = (255,255,255)
+	/trials = [1 = endinstructiontrial]
+</block>
+
+//记得更改trials的数目
+<block studyblock>
+	/trials = [1-30 = wordtrial]
+</block>
+
+<block videoblock>
+	/screencolor = (255,255,255)
+	/trials = [1=videotrial]
+</block>
+
+<expt sub>
+		/blocks = [1 = instruction1; 2 = studyblock; 3 = instruction2; 4 = videoblock; 5 = endinstruction]
+</expt>
